@@ -20,7 +20,7 @@ class MyCreditManager {
     
     private var myStudents:[Student] = []
     
-    ///유저가 원하는 동작을 '획득' => '지시' 책임
+    ///유저가 원하는 동작을 '지시'할 책임
     func selectMenu() {
         var clieckedMenu: TrackingRequest?
         while clieckedMenu != .exit {
@@ -38,6 +38,8 @@ class MyCreditManager {
         }
     }
     
+    
+    ///유저가 '원하는 동작'을 '질문'할 책임
     private func questionForUser() -> TrackingRequest {
         let trackingStateMessages: [String : TrackingRequest ]
         = ["1" : .addStudent,
@@ -58,6 +60,7 @@ class MyCreditManager {
     }
     
 
+    ///유저가 원하는 '학생 추가'를 '요청'할 책임
     private func addStudent() {
         print("추가할 학생의 이름을 입력해주세요.")
         let enterStudent = String(readLine()!)
@@ -72,7 +75,7 @@ class MyCreditManager {
         
     }
     
-    
+    ///유저가 원하는 학생 '삭제'를 '요청'할 책임
     private func deleteStudent() {
         print("삭제할 학생의 이름을 입력해주세요.")
         let enterStudent = String(readLine()!)
@@ -87,6 +90,7 @@ class MyCreditManager {
         
     }
     
+    ///유저가 원하는 학생의 '성적을 추가, 변경' '요청'할 책임
     private func addSubjectAndGrade() {
         print("성적을 추가할 학생의 이름, 과목 이름, 성적(A+, A, F 등)을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift A+\n만약에 학생의 성적 중 해당 과목이 존재하면 기존 점수가 갱신됩니다.")
         let enterSubjectAndGrade = String(readLine()!).components(separatedBy: " ")
@@ -114,6 +118,7 @@ class MyCreditManager {
         }
     }
     
+    ///유저가 원하는 학생의 '성적을 삭제' '요청'할 책임
     private func deleteSubjectAndGrade() {
         print("성적을 삭제할 학생의 이름, 과목 이름을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift")
         let enterSubject = String(readLine()!).components(separatedBy: " ")
@@ -140,6 +145,8 @@ class MyCreditManager {
         }
     }
     
+    
+    ///유저가 원하는 학생의 '성적 정보'를 '요청'할 책임
     private func totalGrade() {
         print("평점을 알고싶은 학생의 이름을 입력해주세요")
         let enterStudent = String(readLine()!)

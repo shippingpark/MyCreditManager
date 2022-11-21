@@ -24,7 +24,6 @@ struct Student {
     
     mutating func addSubjectAndGrade(subject:String, grade:String) {
         totalSubjectAndGrade[subject] = grade
-        print(totalSubjectAndGrade) //확인용 (추후 삭제) 👀
     }
     
     mutating func deleteSubject(subject:String) {
