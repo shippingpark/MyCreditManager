@@ -53,7 +53,7 @@ class MyCreditManager {
         print("1: 학생추가, 2: 학생삭제, 3: 성적추가(변경), 4: 성적삭제, 5: 평점보기, X: 종료")
         let enterAnswer = String(readLine()!)
         let whatMenu = trackingStateMessages[enterAnswer] ?? .error
-        print("The value is \(whatMenu)") //확인용 (추후 삭제) 👀
+        
         return whatMenu
     }
     
@@ -69,11 +69,12 @@ class MyCreditManager {
         }
         myStudents.append(Student(name: enterStudent))
         print("\(enterStudent) 학생을 추가했습니다.")
-        print(myStudents) //확인용 (추후 삭제) 👀
+        
     }
     
     
     private func deleteStudent() {
+        print("삭제할 학생의 이름을 입력해주세요.")
         let enterStudent = String(readLine()!)
         guard enterStudent != "" else { return
             print("입력이 잘못되었습니다. 다시 확인해주세요.")
@@ -83,7 +84,7 @@ class MyCreditManager {
         }
         myStudents = myStudents.filter{!$0.checkName(name: enterStudent)}
         print("\(enterStudent) 학생을 삭제했습니다")
-        print(myStudents) //확인용 (추후 삭제) 👀
+        
     }
     
     private func addSubjectAndGrade() {
@@ -92,6 +93,10 @@ class MyCreditManager {
         guard !enterSubjectAndGrade.contains("") else { return
             print("입력이 잘못되었습니다. 다시 확인해주세요.")
         }
+        guard enterSubjectAndGrade.count == 3 else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+            
         let nameSet = enterSubjectAndGrade[0]
         let subjectSet = enterSubjectAndGrade[1]
         let gradeSet = enterSubjectAndGrade[2]
@@ -103,6 +108,7 @@ class MyCreditManager {
         for (index, student) in myStudents.enumerated() {
             if student.checkName(name: nameSet) {
                 myStudents[index].addSubjectAndGrade(subject: subjectSet, grade: gradeSet)
+                print("\(nameSet) 학생의 \(subjectSet) 과목이 \(gradeSet)로 추가(변경)되었습니다.")
                 break
             }
         }
@@ -112,6 +118,10 @@ class MyCreditManager {
         print("성적을 삭제할 학생의 이름, 과목 이름을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift")
         let enterSubject = String(readLine()!).components(separatedBy: " ")
         guard !enterSubject.contains("") else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        
+        guard enterSubject.count == 2 else { return
             print("입력이 잘못되었습니다. 다시 확인해주세요.")
         }
         let nameSet = enterSubject[0]
@@ -124,6 +134,7 @@ class MyCreditManager {
         for (index, student) in myStudents.enumerated() {
             if student.checkName(name: nameSet) {
                 myStudents[index].deleteSubject(subject: subjectSet)
+                print("\(nameSet) 학생의 \(subjectSet) 과목의 성적이 삭제되었습니다.")
                 break
             }
         }
