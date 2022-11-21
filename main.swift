@@ -7,34 +7,20 @@
 
 import Foundation
 
-/* 필요 기능
-- 학생추가
-- 학생삭제
-- 성적추가(변경)
-- 성적삭제
-- 평점보기
-- 종료
-*/
-
-
 class MyCreditManager {
-    
     private enum TrackingRequest {
         case addStudent
         case deleteStudent
-        case addScore
-        case deleteScore
+        case addSubjectAndGrade
+        case deleteSubjectAndGrade
         case totalGrade
         case exit
         case error
         }
     
-    /* 공백 기준으로 분리하고 String으로 받는 방법
-     let result = input.components(separatedBy: " ")
-     print(type(of: result))
-    */
+    private var myStudents:[Student] = []
     
-    ///⭐️유저가 원하는 동작을 '획득' => '지시' 책임
+    ///유저가 원하는 동작을 '획득' => '지시' 책임
     func selectMenu() {
         var clieckedMenu: TrackingRequest?
         while clieckedMenu != .exit {
@@ -42,8 +28,8 @@ class MyCreditManager {
             switch clieckedMenu {
             case .addStudent: addStudent()
             case .deleteStudent: deleteStudent()
-            case .addScore: addScore()
-            case .deleteScore: deleteScore()
+            case .addSubjectAndGrade: addSubjectAndGrade()
+            case .deleteSubjectAndGrade: deleteSubjectAndGrade()
             case .totalGrade: totalGrade()
             case .exit: print("프로그램을 종료 합니다...")
             case .error: print("뭔가 입력이 잘못되었습니다. 1~5 사이의 숫자 혹은 X를 입력해주세요.")
@@ -56,8 +42,8 @@ class MyCreditManager {
         let trackingStateMessages: [String : TrackingRequest ]
         = ["1" : .addStudent,
            "2" : .deleteStudent,
-           "3" : .addScore,
-           "4" : .deleteScore ,
+           "3" : .addSubjectAndGrade,
+           "4" : .deleteSubjectAndGrade ,
            "5" : .totalGrade,
            "x" : .exit,
            "X" : .exit,
@@ -72,32 +58,98 @@ class MyCreditManager {
     }
     
 
-    func addStudent() {
-        print("1")
-        
+    private func addStudent() {
+        print("추가할 학생의 이름을 입력해주세요.")
+        let enterStudent = String(readLine()!)
+        guard enterStudent != "" else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        guard myStudents.filter({$0.checkName(name: enterStudent)}).count == 0 else { return
+            print("\(enterStudent)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
+        }
+        myStudents.append(Student(name: enterStudent))
+        print("\(enterStudent) 학생을 추가했습니다.")
+        print(myStudents) //확인용 (추후 삭제) 👀
     }
     
     
-    func deleteStudent() {
-        
+    private func deleteStudent() {
+        let enterStudent = String(readLine()!)
+        guard enterStudent != "" else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        guard myStudents.filter({$0.checkName(name: enterStudent)}).count == 1 else { return
+            print("\(enterStudent) 학생을 찾지 못했습니다.")
+        }
+        myStudents = myStudents.filter{!$0.checkName(name: enterStudent)}
+        print("\(enterStudent) 학생을 삭제했습니다")
+        print(myStudents) //확인용 (추후 삭제) 👀
     }
     
-    func addScore() {
+    private func addSubjectAndGrade() {
+        print("성적을 추가할 학생의 이름, 과목 이름, 성적(A+, A, F 등)을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift A+\n만약에 학생의 성적 중 해당 과목이 존재하면 기존 점수가 갱신됩니다.")
+        let enterSubjectAndGrade = String(readLine()!).components(separatedBy: " ")
+        guard !enterSubjectAndGrade.contains("") else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        let nameSet = enterSubjectAndGrade[0]
+        let subjectSet = enterSubjectAndGrade[1]
+        let gradeSet = enterSubjectAndGrade[2]
         
+        guard myStudents.filter({$0.checkName(name: nameSet)}).count == 1 else { return
+            print("\(nameSet) 학생을 찾지 못했습니다.")
+        }
+        
+        for (index, student) in myStudents.enumerated() {
+            if student.checkName(name: nameSet) {
+                myStudents[index].addSubjectAndGrade(subject: subjectSet, grade: gradeSet)
+                break
+            }
+        }
     }
     
-    func deleteScore() {
+    private func deleteSubjectAndGrade() {
+        print("성적을 삭제할 학생의 이름, 과목 이름을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift")
+        let enterSubject = String(readLine()!).components(separatedBy: " ")
+        guard !enterSubject.contains("") else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        let nameSet = enterSubject[0]
+        let subjectSet = enterSubject[1]
         
+        guard myStudents.filter({$0.checkName(name: nameSet)}).count == 1 else { return
+            print("\(nameSet) 학생을 찾지 못했습니다.")
+        }
+        
+        for (index, student) in myStudents.enumerated() {
+            if student.checkName(name: nameSet) {
+                myStudents[index].deleteSubject(subject: subjectSet)
+                break
+            }
+        }
     }
     
-    func totalGrade() {
+    private func totalGrade() {
+        print("평점을 알고싶은 학생의 이름을 입력해주세요")
+        let enterStudent = String(readLine()!)
+        guard enterStudent != "" else { return
+            print("입력이 잘못되었습니다. 다시 확인해주세요.")
+        }
+        guard myStudents.filter({$0.checkName(name: enterStudent)}).count == 1 else { return
+            print("\(enterStudent) 학생을 찾지 못했습니다.")
+        }
         
+        for (index, student) in myStudents.enumerated() {
+            if student.checkName(name: enterStudent) {
+                myStudents[index].totalGrade()
+                break
+            }
+        }
     }
-    
-    
 }
 
 
-let hyeunCreditManager = MyCreditManager()
 
+let hyeunCreditManager = MyCreditManager()
 hyeunCreditManager.selectMenu()
+
