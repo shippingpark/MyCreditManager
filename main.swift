@@ -167,7 +167,6 @@ class MyCreditManager {
 }
 
 
-
 let hyeunCreditManager = MyCreditManager()
 hyeunCreditManager.selectMenu()
 
